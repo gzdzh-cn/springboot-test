@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS department (
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(50)  NOT NULL,
+    description VARCHAR(200),
+    create_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS employee (
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name          VARCHAR(50)  NOT NULL,
+    email         VARCHAR(100),
+    phone         VARCHAR(20),
+    department_id BIGINT       NOT NULL,
+    create_time   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_employee_department FOREIGN KEY (department_id) REFERENCES department(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

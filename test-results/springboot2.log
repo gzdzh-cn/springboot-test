@@ -1,0 +1,36 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2026-05-05 10:55:34.248  INFO 69331 --- [           main] com.demo.employee.EmployeeApplication    : Starting EmployeeApplication v1.0.0 using Java 1.8.0_472 on MacBookPro with PID 69331 (/Volumes/disk/site/java/demo/springboot/springboot2/target/employee-management-1.0.0.jar started by lizheng in /Volumes/disk/site/java/demo/springboot)
+2026-05-05 10:55:34.254  INFO 69331 --- [           main] com.demo.employee.EmployeeApplication    : The following 1 profile is active: "h2"
+2026-05-05 10:55:38.411  INFO 69331 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-05 10:55:38.591  INFO 69331 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 154 ms. Found 2 JPA repository interfaces.
+2026-05-05 10:55:40.809  INFO 69331 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8082 (http)
+2026-05-05 10:55:40.831  INFO 69331 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-05 10:55:40.831  INFO 69331 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-05-05 10:55:40.995  INFO 69331 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-05 10:55:40.996  INFO 69331 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6528 ms
+2026-05-05 10:55:41.796  INFO 69331 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-05 10:55:42.349  INFO 69331 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-05 10:55:42.726  INFO 69331 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-05 10:55:42.837  INFO 69331 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-05-05 10:55:43.234  INFO 69331 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-05-05 10:55:43.511  INFO 69331 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2026-05-05 10:55:44.858  INFO 69331 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-05-05 10:55:44.876  INFO 69331 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-05 10:55:47.982  INFO 69331 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2026-05-05 10:55:48.114  INFO 69331 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8082 (http) with context path ''
+2026-05-05 10:55:48.136  INFO 69331 --- [           main] com.demo.employee.EmployeeApplication    : Started EmployeeApplication in 15.362 seconds (JVM running for 17.014)
+2026-05-05 10:55:48.959  INFO 69331 --- [nio-8082-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-05 10:55:48.960  INFO 69331 --- [nio-8082-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-05 10:55:48.963  INFO 69331 --- [nio-8082-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2026-05-05 10:55:56.583  INFO 69331 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-05 10:55:56.588  INFO 69331 --- [ionShutdownHook] .SchemaDropperImpl$DelayedDropActionImpl : HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2026-05-05 10:55:56.620  INFO 69331 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-05-05 10:55:56.631  INFO 69331 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

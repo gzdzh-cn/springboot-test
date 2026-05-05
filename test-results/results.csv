@@ -1,0 +1,4 @@
+App,Startup_RMB,After_Load_RMB,RPS,MeanTime_ms,Failed
+springboot2,958.3,976.2,运行ab测试: springboot2 (并发: 20, 总请求: 200)... 149.67,133.632
+springboot3,414.5,454.3,运行ab测试: springboot3 (并发: 20, 总请求: 200)... 1862.02,10.741
+springboot4,365.6,374.9,运行ab测试: springboot4 (并发: 20, 总请求: 200)... 1494.95,13.378
