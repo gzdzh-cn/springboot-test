@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工管理系统 - Spring Boot 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            background: #ffe6e6;
+            color: #cc0000;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4facfe;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .page-btn {
+            background: #f0f0f0;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .page-btn:hover {
+            background: #4facfe;
+            color: white;
+        }
+        
+        .page-btn.active {
+            background: #4facfe;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>员工管理系统</h1>
+            <p>Spring Boot 2 + H2 内存数据库</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="deptCount">-</div>
+                <div class="stat-label">部门数量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="empCount">-</div>
+                <div class="stat-label">员工数量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="status">-</div>
+                <div class="stat-label">系统状态</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">部门管理</h2>
+                <button class="btn" onclick="showAddDeptModal()">新增部门</button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" id="deptSearch" placeholder="搜索部门...">
+                <button class="btn" onclick="searchDepartments()">搜索</button>
+            </div>
+            
+            <div id="deptTable">
+                <div class="loading">加载中...</div>
+            </div>
+            
+            <div class="pagination" id="deptPagination"></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">员工管理</h2>
+                <button class="btn" onclick="showAddEmpModal()">新增员工</button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" id="empSearch" placeholder="搜索员工姓名...">
+                <select class="search-input" id="deptFilter">
+                    <option value="">所有部门</option>
+                </select>
+                <button class="btn" onclick="searchEmployees()">搜索</button>
+            </div>
+            
+            <div id="empTable">
+                <div class="loading">加载中...</div>
+            </div>
+            
+            <div class="pagination" id="empPagination"></div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = '/api';
+        let currentDeptPage = 0;
+        let currentEmpPage = 0;
+        const pageSize = 10;
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+            loadDepartments();
+            loadEmployees();
+            loadDepartmentOptions();
+        });
+        
+        // 加载统计数据
+        async function loadStats() {
+            try {
+                const [deptRes, empRes, healthRes] = await Promise.all([
+                    fetch(`${API_BASE}/departments?page=0&size=1`),
+                    fetch(`${API_BASE}/employees?page=0&size=1`),
+                    fetch('/actuator/health')
+                ]);
+                
+                const deptData = await deptRes.json();
+                const empData = await empRes.json();
+                const healthData = await healthRes.json();
+                
+                document.getElementById('deptCount').textContent = deptData.data.totalElements;
+                document.getElementById('empCount').textContent = empData.data.totalElements;
+                document.getElementById('status').textContent = healthData.status === 'UP' ? '正常' : '异常';
+                document.getElementById('status').style.color = healthData.status === 'UP' ? '#27ae60' : '#e74c3c';
+            } catch (error) {
+                console.error('加载统计数据失败:', error);
+            }
+        }
+        
+        // 加载部门列表
+        async function loadDepartments(page = 0) {
+            try {
+                const response = await fetch(`${API_BASE}/departments?page=${page}&size=${pageSize}`);
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    renderDepartmentTable(data.data.content);
+                    renderPagination('deptPagination', data.data, currentDeptPage, loadDepartments);
+                    currentDeptPage = page;
+                } else {
+                    showError('deptTable', '加载部门数据失败');
+                }
+            } catch (error) {
+                showError('deptTable', '网络错误，请检查API服务');
+            }
+        }
+        
+        // 渲染部门表格
+        function renderDepartmentTable(departments) {
+            const container = document.getElementById('deptTable');
+            
+            if (!departments || departments.length === 0) {
+                container.innerHTML = '<div class="loading">暂无部门数据</div>';
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>部门名称</th>
+                            <th>描述</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            departments.forEach(dept => {
+                html += `
+                    <tr>
+                        <td>${dept.id}</td>
+                        <td>${dept.name}</td>
+                        <td>${dept.description || '-'}</td>
+                        <td>${formatDate(dept.createTime)}</td>
+                        <td class="actions">
+                            <button class="btn btn-sm" onclick="editDepartment(${dept.id})">编辑</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteDepartment(${dept.id})">删除</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+        
+        // 加载员工列表
+        async function loadEmployees(page = 0) {
+            try {
+                const deptId = document.getElementById('deptFilter').value;
+                const name = document.getElementById('empSearch').value;
+                
+                let url = `${API_BASE}/employees?page=${page}&size=${pageSize}`;
+                if (deptId) url += `&departmentId=${deptId}`;
+                if (name) url += `&name=${encodeURIComponent(name)}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    renderEmployeeTable(data.data.content);
+                    renderPagination('empPagination', data.data, currentEmpPage, loadEmployees);
+                    currentEmpPage = page;
+                } else {
+                    showError('empTable', '加载员工数据失败');
+                }
+            } catch (error) {
+                showError('empTable', '网络错误，请检查API服务');
+            }
+        }
+        
+        // 渲染员工表格
+        function renderEmployeeTable(employees) {
+            const container = document.getElementById('empTable');
+            
+            if (!employees || employees.length === 0) {
+                container.innerHTML = '<div class="loading">暂无员工数据</div>';
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>姓名</th>
+                            <th>邮箱</th>
+                            <th>电话</th>
+                            <th>部门</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            employees.forEach(emp => {
+                html += `
+                    <tr>
+                        <td>${emp.id}</td>
+                        <td>${emp.name}</td>
+                        <td>${emp.email || '-'}</td>
+                        <td>${emp.phone || '-'}</td>
+                        <td>${emp.departmentName || '-'}</td>
+                        <td class="actions">
+                            <button class="btn btn-sm" onclick="editEmployee(${emp.id})">编辑</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteEmployee(${emp.id})">删除</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+        
+        // 渲染分页
+        function renderPagination(containerId, pageData, currentPage, loadFunction) {
+            const container = document.getElementById(containerId);
+            const totalPages = pageData.totalPages;
+            
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // 上一页按钮
+            if (currentPage > 0) {
+                html += `<button class="page-btn" onclick="${loadFunction.name}(${currentPage - 1})">上一页</button>`;
+            }
+            
+            // 页码按钮
+            for (let i = 0; i < totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<button class="page-btn active">${i + 1}</button>`;
+                } else if (Math.abs(i - currentPage) < 3) {
+                    html += `<button class="page-btn" onclick="${loadFunction.name}(${i})">${i + 1}</button>`;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    html += `<button class="page-btn">...</button>`;
+                }
+            }
+            
+            // 下一页按钮
+            if (currentPage < totalPages - 1) {
+                html += `<button class="page-btn" onclick="${loadFunction.name}(${currentPage + 1})">下一页</button>`;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        // 加载部门选项
+        async function loadDepartmentOptions() {
+            try {
+                const response = await fetch(`${API_BASE}/departments?page=0&size=100`);
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    const select = document.getElementById('deptFilter');
+                    data.data.content.forEach(dept => {
+                        const option = document.createElement('option');
+                        option.value = dept.id;
+                        option.textContent = dept.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('加载部门选项失败:', error);
+            }
+        }
+        
+        // 搜索部门
+        function searchDepartments() {
+            // 简单实现：重新加载第一页
+            loadDepartments(0);
+        }
+        
+        // 搜索员工
+        function searchEmployees() {
+            loadEmployees(0);
+        }
+        
+        // 显示错误信息
+        function showError(containerId, message) {
+            document.getElementById(containerId).innerHTML = `<div class="error">${message}</div>`;
+        }
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleString('zh-CN');
+        }
+        
+        // 模态框函数（简化实现）
+        function showAddDeptModal() {
+            alert('新增部门功能 - 可在此处添加表单');
+        }
+        
+        function showAddEmpModal() {
+            alert('新增员工功能 - 可在此处添加表单');
+        }
+        
+        function editDepartment(id) {
+            alert(`编辑部门 ID: ${id}`);
+        }
+        
+        function deleteDepartment(id) {
+            if (confirm('确定要删除这个部门吗？')) {
+                alert(`删除部门 ID: ${id}`);
+            }
+        }
+        
+        function editEmployee(id) {
+            alert(`编辑员工 ID: ${id}`);
+        }
+        
+        function deleteEmployee(id) {
+            if (confirm('确定要删除这个员工吗？')) {
+                alert(`删除员工 ID: ${id}`);
+            }
+        }
+    </script>
+</body>
+</html>
